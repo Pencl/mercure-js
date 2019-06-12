@@ -1,3 +1,9 @@
+# Project
+dist
+
+# PHP Storm
+.idea
+
 # Logs
 logs
 *.log

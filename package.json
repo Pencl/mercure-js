@@ -1,0 +1,41 @@
+{
+  "name": "mercure-js",
+  "version": "0.0.1",
+  "description": "A mercure javascript client for the browser",
+  "main": "dist/index.js",
+  "scripts": {
+    "prepublish": "npm run lint && npm run test && npm run build",
+    "build": "rimraf dist && tsc -p tsconfig.json",
+    "lint": "tslint --project ./",
+    "test": "jest"
+  },
+  "files": [
+    "dist/**/*.*",
+    "LICENSE",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pencl/mercure-js.git"
+  },
+  "keywords": [
+    "mercure",
+    "pubsub",
+    "pub",
+    "sub"
+  ],
+  "author": "Hannes Früchtenicht<hannes@pencl.de>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Pencl/mercure-js/issues"
+  },
+  "homepage": "https://github.com/Pencl/mercure-js#readme",
+  "devDependencies": {
+    "@types/jest": "^24.0.13",
+    "jest": "^24.8.0",
+    "rimraf": "^2.6.3",
+    "ts-jest": "^24.0.2",
+    "tslint": "^5.17.0",
+    "typescript": "^3.5.1"
+  }
+}
