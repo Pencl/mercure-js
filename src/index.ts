@@ -1,2 +1,5 @@
+import {Client} from "./Client";
 
-export const bla = "blubb";
+const c = new Client("http://localhost:8123/hub");
+c.start();
+
