@@ -43,12 +43,14 @@ export class EventDispatcher<EventType> implements IEventDispatcher<EventType>{
     public once(listener: EventHandler<EventType>) {
         this.onceListeners.push(listener);
     }
+
 }
 
 type EventHandler<EventType> = (event: EventType) => void;
 
 export interface IEventDispatcher<EventType> {
-    dispatch(event: EventType): Promise<void>;
     on(listener: (event: EventType) => void): void;
     off(listener: (event: EventType) => void): void;
+    once(listener: (event: EventType) => void): void;
 }
+

@@ -13,10 +13,10 @@ test("it constructs and initializes", (done) => {
 test("it handles once and on subscriptions correctly", (done) => {
     const onceHandler = jest.fn();
     const onHandler = jest.fn();
-    const dispatcher = new EventDispatcher();
+    const dispatcher = new EventDispatcher<null>();
     dispatcher.once(onceHandler);
     dispatcher.on(onHandler);
-    dispatcher.dispatch(null);
+    dispatcher.dispatch( null);
     dispatcher.dispatch(null);
 
     expect(onceHandler).toHaveBeenCalledTimes(1);
@@ -48,5 +48,30 @@ test("it turns handlers off again", (done) => {
     dispatcher.dispatch(null);
 
     expect(handler).toBeCalledTimes(0);
+    done();
+});
+
+test("it handles errors in callbacks gracefully", (done) => {
+    const dispatcher = new EventDispatcher();
+    const errorHandler = () => {
+        throw new Error("Something bad happened");
+    };
+    const handler = jest.fn();
+    const errorLogger = console.error;
+    console.error = () => {};
+
+    dispatcher.on(handler);
+    dispatcher.on(errorHandler);
+    dispatcher.on(handler);
+
+    dispatcher.once(handler);
+    dispatcher.once(errorHandler);
+    dispatcher.once(handler);
+
+    dispatcher.dispatch(null);
+
+    expect(handler).toBeCalledTimes(4);
+
+    console.error = errorLogger;
     done();
 });
