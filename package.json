@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "prepublish": "npm run lint && npm run test && npm run build",
-    "build": "rimraf dist && tsc -p tsconfig.json",
+    "build": "rimraf dist && rollup -c",
     "lint": "tslint --project ./",
     "test": "jest"
   },
@@ -34,8 +34,12 @@
     "@types/jest": "^24.0.13",
     "jest": "^24.8.0",
     "rimraf": "^2.6.3",
+    "rollup": "^1.15.3",
+    "rollup-plugin-terser": "^5.0.0",
+    "rollup-plugin-typescript2": "^0.21.1",
     "ts-jest": "^24.0.2",
     "tslint": "^5.17.0",
     "typescript": "^3.5.1"
-  }
+  },
+  "dependencies": {}
 }
