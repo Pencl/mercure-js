@@ -4,8 +4,8 @@ export class Topic<EventType> extends EventDispatcher<BaseEvent<EventType>> impl
 
     private hub: URL;
 
-    // TODO: send jwt
-    //private jwt: string | undefined;
+    // TODO: send jwt when subscribing
+    private jwt: string | undefined;
 
     private topic: string;
 
@@ -16,8 +16,7 @@ export class Topic<EventType> extends EventDispatcher<BaseEvent<EventType>> impl
         this.hub = new URL(hub);
         this.hub.searchParams.append("topic", topic);
         this.topic = topic;
-        jwt;
-        //this.jwt = jwt;
+        this.jwt = jwt;
     }
 
     get listening(): boolean {
@@ -42,6 +41,36 @@ export class Topic<EventType> extends EventDispatcher<BaseEvent<EventType>> impl
                 resolve();
             }
         });
+    }
+
+    public async publish(message: EventType, options: IPublishOptions): Promise<void> {
+        if(!this.jwt) {
+            console.warn("Publishing without a valid jwt-token is not allowed. No message will be sent");
+            return;
+        }
+
+        const body = new FormData();
+        body.append("data", JSON.stringify(message));
+        body.append("topic", this.topic);
+
+        if(options.id) {
+            body.append("id", options.id);
+        }
+
+        if (options.retry) {
+            body.append("retry", `${options.retry}`);
+        }
+
+        const response = await fetch(this.hub.origin, {
+            headers: {
+                Authorization: `Bearer ${this.jwt}`
+            },
+            body: body,
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error posting message: ${response.statusText}`);
+        }
     }
 
     public async stopListening(): Promise<void> {
@@ -88,4 +117,14 @@ export interface BaseEvent<EventType> {
     data: EventType;
     id: string;
     topic: string;
+}
+
+export interface IPublishOptions {
+    id?: string;
+    // TODO: ad target support (Issue #)
+    // targets?: string[];
+    retry?: number;
+    // TODO: add type support (SSE event types)
+    // https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Fields
+    // type?: string;
 }
